@@ -121,6 +121,21 @@ describe("приём заявки", () => {
   });
 });
 
+describe("телефон", async () => {
+  const { normalizePhone, formatPhone } = await import("@/lib/order");
+  const { maskPhone } = await import("@/lib/format");
+  it("местный формат приводится к международному", () => {
+    expect(normalizePhone("8 (701) 000-11-22")).toBe("+77010001122");
+    expect(normalizePhone("+7 701 000 11 22")).toBe("+77010001122");
+    expect(normalizePhone("701 000 11 22")).toBe("+77010001122");
+    expect(normalizePhone("+90 532 000 11 22")).toBe("+905320001122");
+  });
+  it("показ и маскировка", () => {
+    expect(formatPhone("+77010001122")).toBe("+7 701 000 11 22");
+    expect(maskPhone("+77010001122")).toBe("+7 701 ••• •• 22");
+  });
+});
+
 describe("приватная ссылка", () => {
   it("по неверному токену заявки нет; заметка владельца не отдаётся", async () => {
     const res = await createOrder(db, parse(request()));
@@ -173,4 +188,50 @@ describe("ограничение частоты", () => {
   });
 });
 
-void photos;
+
+
+describe("кабинет: изменение заявки", async () => {
+  const admin = await import("./admin/orders");
+
+  it("согласовать без цены и времени нельзя", () => {
+    const r = admin.orderUpdateSchema.safeParse({ status: "agreed", finalPrice: null, agreedAt: null, ownerNote: "" });
+    expect(r.success).toBe(false);
+    expect(r.error!.issues.map((i) => i.path[0]).sort()).toEqual(["agreedAt", "finalPrice"]);
+  });
+
+  it("цена, время и статус видны клиенту, заметка — нет; всё попадает в историю", async () => {
+    const res = await createOrder(db, parse(request()));
+    const at = new Date("2026-11-20T05:00:00Z");
+    expect(
+      await admin.updateOrder(db, res.id, { status: "agreed", finalPrice: 30000, agreedAt: at, ownerNote: "домофон 12" }),
+    ).toBe(true);
+    const pub = (await getPublicOrder(db, res.token))!;
+    expect(pub.status).toBe("agreed");
+    expect(pub.finalPrice).toBe(30000);
+    expect(pub.agreedAt?.toISOString()).toBe(at.toISOString());
+    expect(pub.events.map((e) => e.kind)).toEqual(["created", "price", "time", "status"]);
+    expect(JSON.stringify(pub)).not.toContain("домофон");
+    const full = (await admin.getAdminOrder(db, res.id))!;
+    expect(full.ownerNote).toBe("домофон 12");
+    expect(full.events.map((e) => e.kind)).toContain("note");
+  });
+
+  it("поиск по имени, телефону и номеру", async () => {
+    const res = await createOrder(
+      db,
+      parse(request({ customer: { name: "Уникальный Клиент", phone: "+7 701 555 44 33", address: "ул. Поисковая, 7" } })),
+    );
+    expect((await admin.listOrders(db, { q: "уникальный" })).rows.map((r) => r.id)).toContain(res.id);
+    expect((await admin.listOrders(db, { q: "555 44" })).rows.map((r) => r.id)).toContain(res.id);
+    expect((await admin.listOrders(db, { q: String(1000 + res.id) })).rows.map((r) => r.id)).toContain(res.id);
+    expect((await admin.listOrders(db, { q: "100%_" })).rows).toHaveLength(0);
+  });
+
+  it("удаление убирает заявку и её фото", async () => {
+    const photo = await saveUpload(db, await processImage(await pngBytes()));
+    const res = await createOrder(db, parse(request({ photoIds: [photo.id] })));
+    expect(await admin.deleteOrder(db, res.id)).toEqual({ photos: 1 });
+    expect(await getPublicOrder(db, res.token)).toBeNull();
+    expect(await db.select().from(photos).where(eq(photos.id, photo.id))).toHaveLength(0);
+  });
+});

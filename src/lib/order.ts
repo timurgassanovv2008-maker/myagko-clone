@@ -1,6 +1,7 @@
 import { z } from "zod";
 import "./zod-locale";
 import { MAX_ITEMS, orderItemSchema } from "./pricing/calc";
+import { CURRENCY } from "./company";
 
 // Заявка: общая схема для формы в браузере и проверки на сервере.
 
@@ -20,11 +21,33 @@ export function timeSlotTitle(id: string | null | undefined): string | null {
   return TIME_SLOTS.find((s) => s.id === id)?.title ?? null;
 }
 
-/** «+7 (701) 123-45-67» → «+77011234567». */
+/**
+ * Номер в международном виде: «8 (701) 123-45-67» → «+77011234567».
+ * Местные форматы понимаем для страны валюты сайта (KZ: 8…, TR: 0…).
+ */
 export function normalizePhone(raw: string): string {
   const trimmed = raw.trim();
   const digits = trimmed.replace(/\D/g, "");
-  return (trimmed.startsWith("+") ? "+" : "") + digits;
+  if (trimmed.startsWith("+")) return "+" + digits;
+  if (CURRENCY === "KZT") {
+    if (digits.length === 11 && (digits[0] === "8" || digits[0] === "7")) return "+7" + digits.slice(1);
+    if (digits.length === 10) return "+7" + digits;
+  }
+  if (CURRENCY === "TRY") {
+    if (digits.length === 11 && digits[0] === "0") return "+90" + digits.slice(1);
+    if (digits.length === 10 && digits[0] === "5") return "+90" + digits;
+    if (digits.length === 12 && digits.startsWith("90")) return "+" + digits;
+  }
+  return digits.length >= 11 ? "+" + digits : digits;
+}
+
+/** «+77011234567» → «+7 701 123 45 67» (для показа людям). */
+export function formatPhone(p: string): string {
+  const m7 = /^\+7(\d{3})(\d{3})(\d{2})(\d{2})$/.exec(p);
+  if (m7) return `+7 ${m7[1]} ${m7[2]} ${m7[3]} ${m7[4]}`;
+  const m90 = /^\+90(\d{3})(\d{3})(\d{2})(\d{2})$/.exec(p);
+  if (m90) return `+90 ${m90[1]} ${m90[2]} ${m90[3]} ${m90[4]}`;
+  return p;
 }
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;

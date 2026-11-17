@@ -1,4 +1,5 @@
 import { TIME_ZONE } from "./company";
+import { formatPhone } from "./order";
 
 const dateTime = new Intl.DateTimeFormat("ru-RU", {
   timeZone: TIME_ZONE,
@@ -21,6 +22,8 @@ export function formatWishDate(s: string): string {
 
 /** «+77011234567» → «+7 701 ••• •• 67» — в приватной ссылке номер виден не целиком. */
 export function maskPhone(p: string): string {
+  const parts = formatPhone(p).split(" ");
+  if (parts.length === 5) return `${parts[0]} ${parts[1]} ••• •• ${parts[4]}`;
   if (p.length < 6) return p;
   return `${p.slice(0, p.length - 7)} ••• •• ${p.slice(-2)}`;
 }

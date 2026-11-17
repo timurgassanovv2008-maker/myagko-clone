@@ -36,6 +36,8 @@ export type Company = {
   email: string;
   /** Часы работы, например «Ежедневно 9:00–21:00». */
   hours: string;
+  /** Акцентный цвет сайта, #RRGGBB. Пусто — фирменный зелёный. */
+  accent: string;
 };
 
 export const DEMO_COMPANY: Company = {
@@ -49,6 +51,7 @@ export const DEMO_COMPANY: Company = {
   telegram: "",
   email: "",
   hours: "",
+  accent: "",
 };
 
 /** Рабочие каналы связи — только заполненные. */

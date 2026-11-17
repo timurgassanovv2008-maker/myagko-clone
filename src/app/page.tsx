@@ -1,6 +1,8 @@
 import { CATEGORIES } from "@/lib/pricing/catalog";
 import { DEMO_PRICE_LIST } from "@/lib/pricing/price-list";
 import { DEMO_COMPANY, formatMoney } from "@/lib/company";
+import { Configurator } from "@/components/configurator/Configurator";
+import { PickCategory } from "@/components/configurator/PickCategory";
 import styles from "./page.module.css";
 
 const company = DEMO_COMPANY;
@@ -25,28 +27,20 @@ export default function Home() {
       <header className={styles.header}>
         <span className={styles.logo}>{company.name}</span>
         <nav className={styles.nav} aria-label="Разделы">
+          <a href="#raschet">Расчёт</a>
           <a href="#uslugi">Услуги</a>
           <a href="#kak">Как это работает</a>
         </nav>
       </header>
 
       <main>
-        <section className={styles.hero}>
-          <div className={styles.heroText}>
-            <p className={styles.kicker}>{company.tagline}</p>
-            <h1 className={styles.title}>Мягкая мебель снова чистая — не выходя из дома</h1>
-            <p className={styles.lead}>
-              Выберите, что почистить, узнайте примерную стоимость за минуту и оставьте заявку. Мастер приедет со всем
-              оборудованием.
-            </p>
-            <a className={styles.cta} href="#uslugi">
-              Рассчитать стоимость
-            </a>
-          </div>
-          <div className={styles.stage} aria-hidden="true">
-            <div className={styles.stageGlow} />
-          </div>
-        </section>
+        <Configurator prices={prices} currency={company.currency}>
+          <p className={styles.kicker}>{company.tagline}</p>
+          <h1 className={styles.title}>Мягкая мебель снова чистая — не выходя из дома</h1>
+          <p className={styles.lead}>
+            Выберите, что почистить, и сразу увидите примерную стоимость. Мастер приедет со всем оборудованием.
+          </p>
+        </Configurator>
 
         <section id="uslugi" className={styles.section}>
           <h2 className={styles.h2}>Услуги и цены</h2>
@@ -58,6 +52,9 @@ export default function Home() {
                   {c.variants.length > 0 ? c.variants.map((v) => v.title).join(" · ") : "Пуфы, банкетки, изголовья…"}
                 </span>
                 <span className={styles.servicePrice}>{fromPrice(c.id)}</span>
+                <PickCategory category={c.id} className={styles.servicePick}>
+                  Рассчитать
+                </PickCategory>
               </li>
             ))}
           </ul>

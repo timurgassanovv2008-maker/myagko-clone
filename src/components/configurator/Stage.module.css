@@ -1,0 +1,175 @@
+.stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--radius) * 1.4);
+  background:
+    radial-gradient(120% 90% at 50% 18%, var(--surface), transparent 70%),
+    var(--surface-2);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (max-width: 899px) {
+  .stage {
+    aspect-ratio: 5 / 4.4;
+  }
+}
+
+.poster,
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.poster {
+  transition: opacity 400ms ease-out;
+}
+
+/* Без отступа: край постера совпадает с краем сцены, лёгкая тень пола не обрывается. */
+.poster img {
+  object-fit: contain;
+}
+
+.poster[data-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.canvas {
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+  cursor: grab;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+.canvas[data-ready="true"] {
+  opacity: 1;
+}
+
+/* Реплика: позицию задаёт сцена (transform), здесь только вид. */
+.bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  max-width: min(240px, 62%);
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.35;
+  font-weight: 550;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 220ms ease-out;
+  will-change: transform;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: calc(var(--tail-x, 50%) - 7px);
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.bubble[data-show="true"] {
+  opacity: 1;
+}
+
+/* В тёмной теме облачко светлое, иначе сливается со сценой. */
+@media (prefers-color-scheme: dark) {
+  .bubble {
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.4);
+  }
+}
+
+.status {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.retry {
+  min-height: 40px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.hint {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  z-index: 2;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  pointer-events: none;
+  transition: opacity 300ms ease-out;
+}
+
+.hint[data-hidden="true"] {
+  opacity: 0;
+}
+
+.reset {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 120ms ease-out;
+}
+
+.reset:active {
+  transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster,
+  .canvas,
+  .bubble,
+  .hint {
+    transition: none;
+  }
+}

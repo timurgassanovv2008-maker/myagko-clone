@@ -1,0 +1,70 @@
+/* BLISS — базовые цвета, шрифты и отступы.
+   Светлая и тёмная тема переключаются по настройке устройства. */
+
+:root {
+  --bg: #f6f3ee;
+  --surface: #fffdf9;
+  --surface-2: #efe9e0;
+  --ink: #1d1b19;
+  --ink-2: #5f5850;
+  --line: #e2dbd0;
+  --accent: #2f5d50;
+  --accent-ink: #ffffff;
+  --accent-soft: #dfe9e4;
+
+  --radius: 20px;
+  --radius-sm: 12px;
+  --space: clamp(16px, 4vw, 32px);
+  --max: 1120px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141312;
+    --surface: #1d1c1a;
+    --surface-2: #262421;
+    --ink: #f3efe8;
+    --ink-2: #b2aa9f;
+    --line: #34312d;
+    --accent: #8cc2ae;
+    --accent-ink: #10201a;
+    --accent-soft: #23332d;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 100%/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

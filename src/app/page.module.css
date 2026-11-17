@@ -1,0 +1,211 @@
+.page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--space);
+}
+
+/* ── Шапка ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.logo {
+  font-weight: 800;
+  font-size: 1.375rem;
+  letter-spacing: 0.12em;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+  font-size: 0.95rem;
+  color: var(--ink-2);
+}
+
+.nav a {
+  text-decoration: none;
+}
+
+.nav a:hover {
+  color: var(--ink);
+}
+
+/* ── Первый экран ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  padding: clamp(24px, 6vw, 72px) 0;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .hero {
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+
+.kicker {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 750;
+  margin-bottom: 18px;
+}
+
+.lead {
+  color: var(--ink-2);
+  font-size: 1.1rem;
+  max-width: 34em;
+  margin-bottom: 28px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 26px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 650;
+  text-decoration: none;
+  transition: transform 120ms ease-out;
+}
+
+.cta:active {
+  transform: scale(0.97);
+}
+
+/* Место под 3D-сцену */
+.stage {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: calc(var(--radius) * 1.5);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.stageGlow {
+  position: absolute;
+  inset: 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--accent-soft), transparent 70%);
+}
+
+/* ── Разделы ── */
+.section {
+  padding: clamp(32px, 6vw, 64px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+.services {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.serviceTitle {
+  font-weight: 700;
+  font-size: 1.15rem;
+}
+
+.serviceVariants {
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  flex: 1;
+}
+
+.servicePrice {
+  font-weight: 650;
+  color: var(--accent);
+  margin-top: 8px;
+}
+
+.note {
+  margin-top: 18px;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  max-width: 48em;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.step {
+  display: grid;
+  gap: 6px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.stepNum {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.stepTitle {
+  font-weight: 700;
+}
+
+.stepText {
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+
+/* ── Подвал ── */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 28px 0 40px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+  font-size: 0.9rem;
+}
+
+.footerNote {
+  opacity: 0.85;
+}

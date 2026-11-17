@@ -2,6 +2,7 @@ import "server-only";
 import { createHash, randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { redirect } from "next/navigation";
 import { and, eq, gt, lt } from "drizzle-orm";
 import { getDb, type Db } from "../db";
@@ -74,6 +75,7 @@ export async function createSession(db: Db): Promise<void> {
 
 /** Текущий сеанс владельца или null. */
 export async function getSession(): Promise<{ db: Db } | null> {
+  await connection(); // кабинет всегда рендерится по запросу, без заготовки заранее
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!token || token.length > 100) return null;
   const db = await getDb();

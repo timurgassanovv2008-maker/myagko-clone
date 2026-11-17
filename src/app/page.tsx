@@ -3,6 +3,9 @@ import { DEMO_PRICE_LIST } from "@/lib/pricing/price-list";
 import { DEMO_COMPANY, formatMoney } from "@/lib/company";
 import { Configurator } from "@/components/configurator/Configurator";
 import { PickCategory } from "@/components/configurator/PickCategory";
+import { Cart } from "@/components/cart/Cart";
+import { CartBar } from "@/components/cart/CartBar";
+import { CartLink } from "@/components/cart/CartLink";
 import styles from "./page.module.css";
 
 const company = DEMO_COMPANY;
@@ -28,8 +31,11 @@ export default function Home() {
         <span className={styles.logo}>{company.name}</span>
         <nav className={styles.nav} aria-label="Разделы">
           <a href="#raschet">Расчёт</a>
+          <CartLink />
           <a href="#uslugi">Услуги</a>
-          <a href="#kak">Как это работает</a>
+          <a href="#kak" className={styles.navWide}>
+            Как это работает
+          </a>
         </nav>
       </header>
 
@@ -41,6 +47,8 @@ export default function Home() {
             Выберите, что почистить, и сразу увидите примерную стоимость. Мастер приедет со всем оборудованием.
           </p>
         </Configurator>
+
+        <Cart prices={prices} currency={company.currency} />
 
         <section id="uslugi" className={styles.section}>
           <h2 className={styles.h2}>Услуги и цены</h2>
@@ -83,6 +91,8 @@ export default function Home() {
         <span>© {company.name}</span>
         <span className={styles.footerNote}>Сайт в разработке: заявки пока не принимаются.</span>
       </footer>
+
+      <CartBar prices={prices} currency={company.currency} />
     </div>
   );
 }

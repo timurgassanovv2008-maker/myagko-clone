@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { VARIANT_IDS, type VariantId } from "./catalog";
+import { CURRENCY } from "../company";
+import type { CurrencyCode } from "../currency";
 
 // Прайс компании. Хранится в настройках, меняется в кабинете («Тарифы»).
 // Все суммы — целые, в основной валюте компании (без копеек).
@@ -19,21 +21,46 @@ export const priceListSchema = z.object({
 
 export type PriceList = z.infer<typeof priceListSchema>;
 
-/** Демо-прайс. Владелец заменит его в «Тарифах». */
-export const DEMO_PRICE_LIST: PriceList = {
-  variants: {
-    "sofa-2": 9000,
-    "sofa-3": 11000,
-    "sofa-corner": 14000,
-    armchair: 4500,
-    "armchair-recliner": 6000,
-    "mattress-single": 6000,
-    "mattress-double": 8000,
-    "chair-seat": 1200,
-    "chair-seat-back": 1800,
+/**
+ * Демо-прайсы для каждой валюты. Это примерные цены для показа,
+ * владелец заменит их своими в «Тарифах».
+ */
+export const DEMO_PRICE_LISTS: Record<CurrencyCode, PriceList> = {
+  KZT: {
+    variants: {
+      "sofa-2": 18000,
+      "sofa-3": 24000,
+      "sofa-corner": 32000,
+      armchair: 9000,
+      "armchair-recliner": 12000,
+      "mattress-single": 12000,
+      "mattress-double": 18000,
+      "chair-seat": 2500,
+      "chair-seat-back": 3500,
+    },
+    minOrder: 15000,
+    heavySoilPercent: 30,
+    mattressSecondSidePercent: 70,
+    outOfTownFee: 5000,
   },
-  minOrder: 6000,
-  heavySoilPercent: 30,
-  mattressSecondSidePercent: 70,
-  outOfTownFee: 2000,
+  TRY: {
+    variants: {
+      "sofa-2": 2500,
+      "sofa-3": 3200,
+      "sofa-corner": 4200,
+      armchair: 1200,
+      "armchair-recliner": 1600,
+      "mattress-single": 1600,
+      "mattress-double": 2400,
+      "chair-seat": 350,
+      "chair-seat-back": 500,
+    },
+    minOrder: 2000,
+    heavySoilPercent: 30,
+    mattressSecondSidePercent: 70,
+    outOfTownFee: 750,
+  },
 };
+
+/** Демо-прайс для валюты, выбранной в src/lib/company.ts */
+export const DEMO_PRICE_LIST: PriceList = DEMO_PRICE_LISTS[CURRENCY];

@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { addToCart, calculateQuote, orderItemSchema, type OrderItem } from "./calc";
-import { DEMO_PRICE_LIST, priceListSchema, type PriceList } from "./price-list";
+import { DEMO_PRICE_LIST, DEMO_PRICE_LISTS, priceListSchema, type PriceList } from "./price-list";
+import { CURRENCIES, formatMoney, type CurrencyCode } from "../currency";
+import { CURRENCY } from "../company";
 
 const P: PriceList = {
   ...DEMO_PRICE_LIST,
@@ -145,9 +147,19 @@ describe("корзина", () => {
   });
 });
 
-describe("прайс", () => {
-  it("демо-прайс проходит проверку", () => {
-    expect(priceListSchema.safeParse(DEMO_PRICE_LIST).success).toBe(true);
+describe("прайс и валюта", () => {
+  it("демо-прайсы всех валют проходят проверку", () => {
+    for (const code of Object.keys(CURRENCIES) as CurrencyCode[]) {
+      expect(priceListSchema.safeParse(DEMO_PRICE_LISTS[code]).success, code).toBe(true);
+    }
+  });
+  it("по умолчанию — тенге", () => {
+    expect(CURRENCY).toBe("KZT");
+    expect(DEMO_PRICE_LIST).toBe(DEMO_PRICE_LISTS.KZT);
+  });
+  it("суммы форматируются с разрядами и значком валюты", () => {
+    expect(formatMoney(18000, "KZT")).toBe("18 000 ₸");
+    expect(formatMoney(2500, "TRY")).toBe("2 500 ₺");
   });
   it("отрицательные цены и дробные проценты отклоняются", () => {
     expect(priceListSchema.safeParse({ ...DEMO_PRICE_LIST, minOrder: -1 }).success).toBe(false);

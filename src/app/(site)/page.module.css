@@ -1,0 +1,141 @@
+.hero {
+  padding-top: clamp(28px, 7vw, 80px);
+  padding-bottom: clamp(20px, 4vw, 40px);
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.kicker {
+  color: var(--accent);
+  font-weight: 650;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+
+.title {
+  font-size: clamp(2.1rem, 6vw, 3.9rem);
+  line-height: 1.04;
+  letter-spacing: -0.03em;
+  font-weight: 780;
+  margin-bottom: 18px;
+  text-wrap: balance;
+}
+
+.lead {
+  color: var(--ink-2);
+  font-size: clamp(1.02rem, 2vw, 1.15rem);
+  max-width: 34em;
+  margin: 0 auto 28px;
+  text-wrap: pretty;
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.section {
+  padding-top: clamp(32px, 6vw, 64px);
+  padding-bottom: clamp(32px, 6vw, 64px);
+  scroll-margin-top: 64px;
+}
+
+.picker {
+  padding-top: 8px;
+}
+
+.h2 {
+  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 24px;
+}
+
+.services {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px 20px 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.serviceArt {
+  width: 100%;
+  height: auto;
+  max-height: 120px;
+  margin-bottom: 8px;
+}
+
+.serviceTitle {
+  font-weight: 700;
+  font-size: 1.12rem;
+}
+
+.serviceVariants {
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.servicePrice {
+  font-weight: 650;
+  color: var(--accent);
+  margin-top: 8px;
+}
+
+.note {
+  margin: 18px 0 20px;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  max-width: 52em;
+}
+
+.steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.step {
+  display: grid;
+  gap: 6px;
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.stepNum {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.stepTitle {
+  font-weight: 700;
+}
+
+.stepText {
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}

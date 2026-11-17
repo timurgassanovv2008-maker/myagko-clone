@@ -1,0 +1,54 @@
+.region {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 92px);
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 60;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 480px;
+  min-height: 52px;
+  padding: 8px 8px 8px 18px;
+  border-radius: 16px;
+  background: var(--ink);
+  color: var(--bg);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  pointer-events: auto;
+  animation: up 260ms var(--ease) both;
+}
+
+.action {
+  min-height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--accent-soft);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (prefers-color-scheme: dark) {
+  .action {
+    color: var(--accent-ink);
+  }
+}
+
+.action:hover {
+  background: rgba(127, 127, 127, 0.18);
+}
+
+@keyframes up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}

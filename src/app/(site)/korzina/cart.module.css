@@ -1,0 +1,175 @@
+.page {
+  padding: clamp(20px, 4vw, 40px) 0 0;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.h1 {
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.page > .h1 {
+  margin-bottom: 20px;
+}
+
+.h2 {
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+}
+
+.layout {
+  display: grid;
+  gap: 18px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+  }
+
+  .summary {
+    position: sticky;
+    top: 84px;
+  }
+}
+
+.lines {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  padding: 14px;
+  animation: in 260ms var(--ease) both;
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.thumb {
+  width: 84px;
+  height: 84px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.lineBody {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lineHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.lineTitle {
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.linePrice {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.inline {
+  display: block;
+}
+
+.select {
+  min-height: 44px;
+  padding: 8px 12px;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  font-size: 0.93rem;
+  cursor: pointer;
+}
+
+.opt input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--accent);
+}
+
+.lineFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.summary {
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+
+.fine {
+  font-size: 0.85rem;
+  color: var(--ink-3);
+}
+
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 36px 20px;
+  text-align: center;
+}
+
+.emptyArt {
+  width: 200px;
+  opacity: 0.55;
+  filter: grayscale(0.4);
+}
+
+.emptyTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.emptyText {
+  color: var(--ink-2);
+  max-width: 28em;
+  margin-bottom: 10px;
+}
+
+.skeleton {
+  height: 220px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}

@@ -1,6 +1,6 @@
 import type { Quote } from "@/lib/pricing/calc";
 import { formatMoney, type CurrencyCode } from "@/lib/currency";
-import { ITEM_FORMS, plural } from "@/lib/plural";
+import { ITEMS, plural } from "@/lib/cart/labels";
 import styles from "./QuoteSummary.module.css";
 
 type Props = {
@@ -35,7 +35,7 @@ export function QuoteSummary({ quote, currency, minOrder, totalLabel = "Пред
       {quote.manualCount > 0 && (
         <div className={styles.row}>
           <dt>
-            {quote.manualCount} {plural(quote.manualCount, ITEM_FORMS)} по фото
+            {quote.manualCount} {plural(quote.manualCount, ITEMS)} по фото
             <span className={styles.sub}>мастер оценит по фото и назовёт цену</span>
           </dt>
           <dd>по фото</dd>

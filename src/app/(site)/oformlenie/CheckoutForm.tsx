@@ -8,7 +8,7 @@ import { calculateQuote } from "@/lib/pricing/calc";
 import type { PriceList } from "@/lib/pricing/price-list";
 import { formatMoney, type CurrencyCode } from "@/lib/currency";
 import { crossFieldIssues, flattenIssues, orderRequestSchema, TIME_SLOTS, type FieldErrors } from "@/lib/order";
-import { cart, useCart } from "@/lib/client/cart-store";
+import { readCart, useCart, writeCart } from "@/lib/cart/store";
 import { prepareImage, ImagePrepError } from "@/lib/client/images";
 import { rememberOrder } from "@/lib/client/recent-orders";
 import { randomId, readJson, removeKey, writeJson } from "@/lib/client/storage";
@@ -67,7 +67,7 @@ type Props = { prices: PriceList; currency: CurrencyCode };
 
 export function CheckoutForm(props: Props) {
   const hydrated = useHydrated();
-  const { lines } = useCart();
+  const lines = useCart();
   if (!hydrated) {
     return (
       <div className={styles.page} aria-busy="true">
@@ -82,7 +82,7 @@ export function CheckoutForm(props: Props) {
         <h1 className={styles.h1}>Оформление заявки</h1>
         <div className="card" style={{ padding: 24, display: "grid", gap: 14, justifyItems: "start" }}>
           <p>В корзине пока ничего нет — сначала выберите мебель.</p>
-          <Link href="/#vybor" className="btn btn-primary">
+          <Link href="/#raschet" className="btn btn-primary">
             Выбрать мебель
           </Link>
         </div>
@@ -96,7 +96,7 @@ type SendState = { kind: "idle" } | { kind: "sending" } | { kind: "error"; messa
 
 function CheckoutInner({ prices, currency }: Props) {
   const router = useRouter();
-  const { lines } = useCart();
+  const lines = useCart();
   const [draft, setDraft] = useState<Draft>(loadDraft);
   const [photos, setPhotos] = useState<Photo[]>(() =>
     draft.photos.map((p) => ({ key: p.id, status: "done", id: p.id, thumb: p.thumb })),
@@ -185,7 +185,8 @@ function CheckoutInner({ prices, currency }: Props) {
 
     const payload = {
       idempotencyKey: draft.key,
-      items: cart.items(),
+      // id позиции нужен только корзине; на сервер уходят сами позиции
+      items: readCart().map(({ id: _id, ...item }) => item), // eslint-disable-line @typescript-eslint/no-unused-vars
       customer: {
         name: draft.name,
         phone: draft.phone,
@@ -227,7 +228,7 @@ function CheckoutInner({ prices, currency }: Props) {
       done.current = true;
       rememberOrder({ token: data.token, number: data.number, at: new Date().toISOString() });
       removeKey(DRAFT_KEY);
-      cart.clear();
+      writeCart([]);
       router.replace(`/z/${data.token}?new=1`);
       return;
     }
@@ -273,8 +274,8 @@ function CheckoutInner({ prices, currency }: Props) {
     <div className={styles.page}>
       <div className={styles.head}>
         <h1 className={styles.h1}>Оформление заявки</h1>
-        <Link href="/korzina" className="btn btn-ghost">
-          ← Корзина
+        <Link href="/#zakaz" className="btn btn-ghost">
+          ← К заказу
         </Link>
       </div>
 

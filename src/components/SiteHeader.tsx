@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CartLink } from "./CartBar";
+import { CartLink } from "./cart/CartLink";
 import styles from "./Site.module.css";
 
 export function SiteHeader({ name }: { name: string }) {
@@ -10,14 +10,14 @@ export function SiteHeader({ name }: { name: string }) {
           {name}
         </Link>
         <nav className={styles.nav} aria-label="Разделы">
-          <Link href="/#vybor">Рассчитать</Link>
+          <Link href="/#raschet">Расчёт</Link>
+          <CartLink className={styles.cartLink} />
           <Link href="/#uslugi" className={styles.navWide}>
-            Цены
+            Услуги
           </Link>
           <Link href="/#kontakty" className={styles.navWide}>
             Контакты
           </Link>
-          <CartLink />
         </nav>
       </div>
     </header>

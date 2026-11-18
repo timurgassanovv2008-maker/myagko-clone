@@ -19,15 +19,6 @@
   --warn-soft: #f5ead3;
   --ok: #2f7a4f;
 
-  /* Ткань мебели на постерах */
-  --fabric-sofa: #7fa596;
-  --fabric-armchair: #d08a6a;
-  --fabric-mattress: #f2ede4;
-  --fabric-mattress-2: #9db4cc;
-  --fabric-chair: #e0b15a;
-  --fabric-other: #a99cc8;
-  --wood: #8a6446;
-  --shade: rgba(40, 30, 20, 0.14);
 
   --radius: 20px;
   --radius-sm: 12px;
@@ -58,14 +49,6 @@
     --warn-soft: #362d1c;
     --ok: #7fd09f;
 
-    --fabric-sofa: #6b9585;
-    --fabric-armchair: #c07b5c;
-    --fabric-mattress: #ddd6ca;
-    --fabric-mattress-2: #7f98b2;
-    --fabric-chair: #c99a48;
-    --fabric-other: #9385b5;
-    --wood: #6e5038;
-    --shade: rgba(0, 0, 0, 0.35);
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.25);
   }
 }
@@ -79,6 +62,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* липкая шапка сверху и плашка заказа снизу не закрывают цель перехода по якорю */
+  scroll-padding-top: 76px;
+  scroll-padding-bottom: 88px;
 }
 
 body {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { CATEGORY_BY_ID, variantTitle } from "@/lib/pricing/catalog";
 import { formatMoney, type CurrencyCode } from "@/lib/currency";
@@ -28,6 +29,7 @@ export default function OrderPage({ params, searchParams }: PageProps<"/z/[token
 }
 
 async function OrderView({ params, searchParams }: Pick<PageProps<"/z/[token]">, "params" | "searchParams">) {
+  await connection(); // заявка всегда читается из базы в момент запроса
   const { token } = await params;
   const { new: isNew } = await searchParams;
   if (!TOKEN_RE.test(token)) notFound();

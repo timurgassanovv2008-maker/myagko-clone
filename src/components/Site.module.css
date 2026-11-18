@@ -29,7 +29,7 @@
   font-size: 0.95rem;
 }
 
-.nav > a:not(:last-child) {
+.nav > a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -39,9 +39,14 @@
   text-decoration: none;
 }
 
-.nav > a:not(:last-child):hover {
+.nav > a:hover {
   color: var(--ink);
   background: var(--surface-2);
+}
+
+.cartLink {
+  color: var(--ink) !important;
+  font-weight: 650;
 }
 
 .navWide {

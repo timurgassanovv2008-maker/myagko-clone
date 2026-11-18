@@ -1,56 +1,41 @@
-.hero {
-  padding-top: clamp(28px, 7vw, 80px);
-  padding-bottom: clamp(20px, 4vw, 40px);
-  max-width: 860px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+.page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--space);
 }
 
+/* ── Первый экран (сетку задаёт конфигуратор) ── */
 .kicker {
   color: var(--accent);
-  font-weight: 650;
+  font-weight: 600;
   font-size: 0.95rem;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .title {
-  font-size: clamp(2.1rem, 6vw, 3.9rem);
-  line-height: 1.04;
-  letter-spacing: -0.03em;
-  font-weight: 780;
-  margin-bottom: 18px;
+  font-size: clamp(2rem, 4.6vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-weight: 750;
+  margin-bottom: 16px;
   text-wrap: balance;
 }
 
 .lead {
   color: var(--ink-2);
-  font-size: clamp(1.02rem, 2vw, 1.15rem);
+  font-size: 1.08rem;
   max-width: 34em;
-  margin: 0 auto 28px;
-  text-wrap: pretty;
 }
 
-.heroActions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-}
-
+/* ── Разделы ── */
 .section {
-  padding-top: clamp(32px, 6vw, 64px);
-  padding-bottom: clamp(32px, 6vw, 64px);
-  scroll-margin-top: 64px;
-}
-
-.picker {
-  padding-top: 8px;
+  padding: clamp(32px, 6vw, 64px) 0;
+  border-top: 1px solid var(--line);
 }
 
 .h2 {
-  font-size: clamp(1.5rem, 3.4vw, 2.2rem);
-  letter-spacing: -0.02em;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.015em;
   line-height: 1.15;
   margin-bottom: 24px;
 }
@@ -58,35 +43,28 @@
 .services {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 14px;
 }
 
 .service {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 18px 20px 20px;
+  gap: 6px;
+  padding: 22px;
   border-radius: var(--radius);
   background: var(--surface);
   border: 1px solid var(--line);
 }
 
-.serviceArt {
-  width: 100%;
-  height: auto;
-  max-height: 120px;
-  margin-bottom: 8px;
-}
-
 .serviceTitle {
   font-weight: 700;
-  font-size: 1.12rem;
+  font-size: 1.15rem;
 }
 
 .serviceVariants {
   color: var(--ink-2);
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   flex: 1;
 }
 
@@ -96,11 +74,31 @@
   margin-top: 8px;
 }
 
+.servicePick {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  margin-top: 6px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 650;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.servicePick:hover {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
 .note {
-  margin: 18px 0 20px;
+  margin-top: 18px;
   color: var(--ink-2);
   font-size: 0.92rem;
-  max-width: 52em;
+  max-width: 48em;
 }
 
 .steps {
@@ -122,8 +120,8 @@
 .stepNum {
   display: inline-grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: var(--accent-soft);
   color: var(--accent);

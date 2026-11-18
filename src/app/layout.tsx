@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { getPublicSettings } from "@/server/public-settings";
-import { Toaster } from "@/components/Toaster";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,7 +25,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="ru">
       <body>
         {children}
-        <Toaster />
       </body>
     </html>
   );

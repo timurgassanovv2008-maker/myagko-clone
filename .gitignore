@@ -43,3 +43,7 @@ next-env.d.ts
 
 # локальная база PGlite
 /.data
+# blender: несжатый экспорт и резервные копии
+/blender/export/
+*.blend1
+__pycache__/

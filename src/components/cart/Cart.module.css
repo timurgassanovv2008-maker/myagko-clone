@@ -213,6 +213,10 @@
 }
 
 .primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   min-height: 52px;
   padding: 0 28px;
   border: 0;

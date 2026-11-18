@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { MAX_QTY, calculateQuote } from "@/lib/pricing/calc";
 import type { PriceList } from "@/lib/pricing/price-list";
 import { formatMoney, type CurrencyCode } from "@/lib/currency";
@@ -8,6 +9,7 @@ import { removeItem, restoreItem, updateItem, totalQty, type Removed } from "@/l
 import { ITEMS, itemExtras, itemTitle, plural } from "@/lib/cart/labels";
 import { readCart, useCart, writeCart } from "@/lib/cart/store";
 import { requestEdit } from "@/components/configurator/events";
+import { RecentOrders } from "@/components/RecentOrders";
 import styles from "./Cart.module.css";
 
 type Props = { prices: PriceList; currency: CurrencyCode };
@@ -58,6 +60,7 @@ export function Cart({ prices, currency }: Props) {
           <a href="#raschet" className={styles.link}>
             Выбрать мебель ↑
           </a>
+          <RecentOrders />
         </div>
       ) : (
         <>
@@ -163,12 +166,10 @@ export function Cart({ prices, currency }: Props) {
           </div>
 
           <div className={styles.checkout}>
-            <button type="button" className={styles.primary} disabled aria-describedby="zakaz-soon">
+            <Link href="/oformlenie" className={styles.primary}>
               Оформить заявку
-            </button>
-            <p id="zakaz-soon" className={styles.fine}>
-              Онлайн-заявка скоро заработает. Заказ сохранится в этом браузере.
-            </p>
+            </Link>
+            <p className={styles.fine}>Оплата не нужна. Заказ сохраняется в этом браузере.</p>
             <a href="#raschet" className={styles.link}>
               Добавить ещё ↑
             </a>

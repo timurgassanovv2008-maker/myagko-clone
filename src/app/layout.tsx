@@ -1,12 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { DEMO_COMPANY } from "@/lib/company";
+import { getPublicSettings } from "@/server/public-settings";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: `${DEMO_COMPANY.name} — ${DEMO_COMPANY.tagline.toLowerCase()}`,
-  description:
-    "Выберите мебель, сразу узнайте примерную стоимость химчистки и оставьте заявку. Мастер приедет и почистит диван, кресло, матрас или стулья у вас дома.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { company } = await getPublicSettings();
+  const title = `${company.name} — ${company.tagline.toLowerCase()}`;
+  return {
+    title: { default: title, template: `%s — ${company.name}` },
+    description:
+      "Выберите мебель, сразу узнайте примерную стоимость химчистки и оставьте заявку. Мастер приедет и почистит диван, кресло, матрас или стулья у вас дома.",
+    applicationName: company.name,
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: [
@@ -18,7 +23,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        {children}
+      </body>
     </html>
   );
 }

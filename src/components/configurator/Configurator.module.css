@@ -34,7 +34,7 @@
 @media (min-width: 900px) {
   .stageCol {
     position: sticky;
-    top: 16px;
+    top: 80px; /* под липкой шапкой сайта */
     align-self: start;
   }
 }

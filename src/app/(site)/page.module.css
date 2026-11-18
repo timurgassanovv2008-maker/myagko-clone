@@ -4,41 +4,6 @@
   padding: 0 var(--space);
 }
 
-/* ── Шапка ── */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-}
-
-.logo {
-  font-weight: 800;
-  font-size: 1.375rem;
-  letter-spacing: 0.12em;
-}
-
-.nav {
-  display: flex;
-  gap: 20px;
-  font-size: 0.95rem;
-  color: var(--ink-2);
-}
-
-.nav a {
-  text-decoration: none;
-}
-
-.nav a:hover {
-  color: var(--ink);
-}
-
-@media (max-width: 479px) {
-  .navWide {
-    display: none;
-  }
-}
-
 /* ── Первый экран (сетку задаёт конфигуратор) ── */
 .kicker {
   color: var(--accent);
@@ -171,21 +136,4 @@
 .stepText {
   color: var(--ink-2);
   font-size: 0.95rem;
-}
-
-/* ── Подвал ── */
-.footer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px;
-  /* снизу место под плашку заказа */
-  padding: 28px 0 96px;
-  border-top: 1px solid var(--line);
-  color: var(--ink-2);
-  font-size: 0.9rem;
-}
-
-.footerNote {
-  opacity: 0.85;
 }

@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import sharp from "sharp";
 import { eq } from "drizzle-orm";
-import { connectPglite, type Db } from "./db";
+import { connectPglite, connectPostgres, type Db } from "./db";
 import { orderEvents, orders, photos } from "./db/schema";
 import { createOrder, getPublicOrder, OrderInputError } from "./orders";
 import { processImage, saveUpload, sniffFormat, getOrderPhotoByToken, PhotoError } from "./photos";
@@ -11,8 +11,10 @@ import { orderRequestSchema, type OrderRequestInput } from "@/lib/order";
 import { DEMO_PRICE_LIST } from "@/lib/pricing/price-list";
 
 let db: Db;
+// По умолчанию — PGlite в памяти. С TEST_DATABASE_URL — настоящий PostgreSQL (пустая база).
 beforeAll(async () => {
-  db = await connectPglite("memory://");
+  const url = process.env.TEST_DATABASE_URL;
+  db = url ? await connectPostgres(url) : await connectPglite("memory://");
 });
 
 let n = 0;

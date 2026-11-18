@@ -36,21 +36,25 @@ async function connect(): Promise<Db> {
   return connectPglite(dir);
 }
 
-async function connectPostgres(url: string): Promise<Db> {
-  const { Pool } = await import("pg");
+export async function connectPostgres(url: string): Promise<Db> {
+  const { Client, Pool } = await import("pg");
   const { drizzle } = await import("drizzle-orm/node-postgres");
   const { migrate } = await import("drizzle-orm/node-postgres/migrator");
-  const pool = new Pool({ connectionString: url, max: Number(process.env.DATABASE_POOL_MAX ?? 5) });
 
-  // Миграции под advisory-lock: несколько одновременных запусков не помешают друг другу.
-  const client = await pool.connect();
+  // Миграции — через отдельное прямое соединение (не через пул соединений провайдера):
+  // advisory-lock держится на сессии, а закрытие соединения гарантированно его снимает.
+  // Neon через Vercel даёт DATABASE_URL_UNPOOLED, Vercel Postgres — POSTGRES_URL_NON_POOLING.
+  const direct = process.env.DATABASE_URL_UNPOOLED || process.env.POSTGRES_URL_NON_POOLING || url;
+  const client = new Client({ connectionString: direct });
+  await client.connect();
   try {
-    await client.query("select pg_advisory_lock(727001)");
+    await client.query("select pg_advisory_lock(727001)"); // несколько одновременных запусков не помешают друг другу
     await migrate(drizzle(client, { schema }), { migrationsFolder: MIGRATIONS });
   } finally {
-    await client.query("select pg_advisory_unlock(727001)").catch(() => {});
-    client.release();
+    await client.end().catch(() => {});
   }
+
+  const pool = new Pool({ connectionString: url, max: Number(process.env.DATABASE_POOL_MAX ?? 5) });
   return drizzle(pool, { schema });
 }
 

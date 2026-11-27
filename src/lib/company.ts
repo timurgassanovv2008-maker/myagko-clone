@@ -7,19 +7,29 @@ export { formatMoney } from "./currency";
 
 /**
  * ВАЛЮТА САЙТА.
+ *   "EUR" — евро (€)
  *   "KZT" — тенге (₸)
  *   "TRY" — турецкая лира (₺)
  * Поменяйте значение — и цены, и значок валюты на сайте переключатся
  * (демо-прайс для каждой валюты лежит в src/lib/pricing/price-list.ts).
  */
-export const CURRENCY: CurrencyCode = "KZT";
+export const CURRENCY: CurrencyCode = "EUR";
 
-/** Часовой пояс для дат и времени на сайте и в кабинете. */
+/** Часовой пояс для дат и времени на сайте и в кабинете. Для евро — центральноевропейское время. */
 export const TIME_ZONES: Record<CurrencyCode, string> = {
   KZT: "Asia/Almaty",
   TRY: "Europe/Istanbul",
+  EUR: "Europe/Berlin",
 };
 export const TIME_ZONE = TIME_ZONES[CURRENCY];
+
+/** Пример номера в подсказках полей. */
+export const PHONE_EXAMPLES: Record<CurrencyCode, string> = {
+  KZT: "+7 700 000 00 00",
+  TRY: "+90 532 000 00 00",
+  EUR: "+49 151 2345 6789",
+};
+export const PHONE_EXAMPLE = PHONE_EXAMPLES[CURRENCY];
 
 export type Company = {
   name: string;

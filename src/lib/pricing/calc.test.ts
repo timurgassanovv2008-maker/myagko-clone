@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addToCart, calculateQuote, orderItemSchema, type OrderItem } from "./calc";
+import { ROUND_STEP, addToCart, calculateQuote, orderItemSchema, type OrderItem } from "./calc";
 import { DEMO_PRICE_LIST, DEMO_PRICE_LISTS, priceListSchema, type PriceList } from "./price-list";
 import { CURRENCIES, formatMoney, type CurrencyCode } from "../currency";
 import { CURRENCY } from "../company";
@@ -43,14 +43,25 @@ describe("calculateQuote — формула", () => {
     expect(q.lines[0]).toMatchObject({ surchargePercent: 100, amount: 16000 });
   });
 
-  it("округление до 10 по каждой позиции, половина вверх", () => {
+  it("тенге и лиры: округление до 10 по каждой позиции, половина вверх", () => {
     // 4555 → 4560 ; 4555 × 1.3 = 5921.5 → 5920
-    expect(calculateQuote([item({ category: "armchair", variant: "armchair" })], P, false).lines[0]).toMatchObject({ amount: 4560 });
+    expect(calculateQuote([item({ category: "armchair", variant: "armchair" })], P, false, 10).lines[0]).toMatchObject({ amount: 4560 });
     expect(
-      calculateQuote([item({ category: "armchair", variant: "armchair", heavySoil: true })], P, false).lines[0],
+      calculateQuote([item({ category: "armchair", variant: "armchair", heavySoil: true })], P, false, 10).lines[0],
     ).toMatchObject({ amount: 5920 });
     const p2 = { ...P, variants: { ...P.variants, armchair: 4545 } };
-    expect(calculateQuote([item({ category: "armchair", variant: "armchair" })], p2, false).lines[0]).toMatchObject({ amount: 4550 });
+    expect(calculateQuote([item({ category: "armchair", variant: "armchair" })], p2, false, 10).lines[0]).toMatchObject({ amount: 4550 });
+  });
+
+  it("евро: округление до 1, половина вверх", () => {
+    const e = { ...P, variants: { ...P.variants, armchair: 39, "chair-seat": 12 } };
+    // 39 × 1.3 = 50.7 → 51 ; 12 × 3 × 1.3 = 46.8 → 47 ; 45 × 1.3 = 58.5 → 59
+    expect(calculateQuote([item({ category: "armchair", variant: "armchair", heavySoil: true })], e, false, 1).lines[0]).toMatchObject({ amount: 51 });
+    expect(
+      calculateQuote([item({ category: "chair", variant: "chair-seat", qty: 3, heavySoil: true })], e, false, 1).lines[0],
+    ).toMatchObject({ amount: 47 });
+    const e2 = { ...e, variants: { ...e.variants, armchair: 45 } };
+    expect(calculateQuote([item({ category: "armchair", variant: "armchair", heavySoil: true })], e2, false, 1).lines[0]).toMatchObject({ amount: 59 });
   });
 
   it("вторая сторона игнорируется не у матраса", () => {
@@ -153,13 +164,16 @@ describe("прайс и валюта", () => {
       expect(priceListSchema.safeParse(DEMO_PRICE_LISTS[code]).success, code).toBe(true);
     }
   });
-  it("по умолчанию — тенге", () => {
-    expect(CURRENCY).toBe("KZT");
-    expect(DEMO_PRICE_LIST).toBe(DEMO_PRICE_LISTS.KZT);
+  it("сейчас — евро, округление строк до 1 €", () => {
+    expect(CURRENCY).toBe("EUR");
+    expect(DEMO_PRICE_LIST).toBe(DEMO_PRICE_LISTS.EUR);
+    expect(ROUND_STEP).toBe(1);
   });
   it("суммы форматируются с разрядами и значком валюты", () => {
     expect(formatMoney(18000, "KZT")).toBe("18 000 ₸");
     expect(formatMoney(2500, "TRY")).toBe("2 500 ₺");
+    expect(formatMoney(99, "EUR")).toBe("99 €");
+    expect(formatMoney(1390, "EUR")).toBe("1 390 €");
   });
   it("отрицательные цены и дробные проценты отклоняются", () => {
     expect(priceListSchema.safeParse({ ...DEMO_PRICE_LIST, minOrder: -1 }).success).toBe(false);

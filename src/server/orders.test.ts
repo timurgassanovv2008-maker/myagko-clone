@@ -81,7 +81,7 @@ describe("приём заявки", () => {
             { category: "chair", variant: "chair-seat", qty: 2 },
             { category: "other", qty: 1, description: "Пуф круглый" },
           ],
-          customer: { name: "Тест", phone: "87000000000", address: "ул. Вымышленная, 2", outOfTown: true },
+          customer: { name: "Тест", phone: "+7 700 000 00 00", address: "ул. Вымышленная, 2", outOfTown: true },
           photoIds: [photo.id],
         }),
       ),
@@ -102,7 +102,7 @@ describe("приём заявки", () => {
 
   it("время без даты не принимается", () => {
     const r = orderRequestSchema.safeParse(
-      request({ customer: { name: "Тест", phone: "87000000000", address: "ул. Вымышленная, 2", wishTime: "09-12" } }),
+      request({ customer: { name: "Тест", phone: "+77000000000", address: "ул. Вымышленная, 2", wishTime: "09-12" } }),
     );
     expect(r.success).toBe(false);
   });
@@ -127,10 +127,21 @@ describe("телефон", async () => {
   const { normalizePhone, formatPhone } = await import("@/lib/order");
   const { maskPhone } = await import("@/lib/format");
   it("местный формат приводится к международному", () => {
-    expect(normalizePhone("8 (701) 000-11-22")).toBe("+77010001122");
-    expect(normalizePhone("+7 701 000 11 22")).toBe("+77010001122");
-    expect(normalizePhone("701 000 11 22")).toBe("+77010001122");
-    expect(normalizePhone("+90 532 000 11 22")).toBe("+905320001122");
+    expect(normalizePhone("8 (701) 000-11-22", "KZT")).toBe("+77010001122");
+    expect(normalizePhone("+7 701 000 11 22", "KZT")).toBe("+77010001122");
+    expect(normalizePhone("701 000 11 22", "KZT")).toBe("+77010001122");
+    expect(normalizePhone("0532 000 11 22", "TRY")).toBe("+905320001122");
+    expect(normalizePhone("+90 532 000 11 22", "TRY")).toBe("+905320001122");
+  });
+  it("евро: нужен код страны", () => {
+    expect(normalizePhone("+49 151 2345 6789", "EUR")).toBe("+4915123456789");
+    expect(normalizePhone("0049 151 2345 6789", "EUR")).toBe("+4915123456789");
+    expect(normalizePhone("0151 2345 6789", "EUR")).toBe("015123456789");
+    const r = orderRequestSchema.safeParse(
+      request({ customer: { name: "Тест", phone: "0151 2345 6789", address: "Musterstraße 1, Berlin" } }),
+    );
+    expect(r.success).toBe(false);
+    expect(r.error?.issues[0].message).toMatch(/кодом страны/);
   });
   it("показ и маскировка", () => {
     expect(formatPhone("+77010001122")).toBe("+7 701 000 11 22");

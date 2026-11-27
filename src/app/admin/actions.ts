@@ -7,7 +7,7 @@ import "@/lib/zod-locale";
 import { priceListSchema } from "@/lib/pricing/price-list";
 import { VARIANT_IDS } from "@/lib/pricing/catalog";
 import { flattenIssues, type FieldErrors } from "@/lib/order";
-import { TIME_ZONE } from "@/lib/company";
+import { PHONE_EXAMPLE, TIME_ZONE } from "@/lib/company";
 import { zonedLocalToDate } from "@/lib/tz";
 import { getDb } from "@/server/db";
 import { createSession, destroySession, requireAdmin, setPassword, verifyPassword } from "@/server/admin/auth";
@@ -135,7 +135,7 @@ const companySchema = z.object({
   tagline: z.string().trim().min(1, "Укажите описание").max(80, "До 80 символов"),
   city: optionalText(60),
   area: optionalText(120),
-  phone: optionalText(30).refine((s) => s === "" || /^[+\d][\d\s()-]{6,}$/.test(s), "Номер в формате +7 700 000 00 00"),
+  phone: optionalText(30).refine((s) => s === "" || /^[+\d][\d\s()-]{6,}$/.test(s), `Номер в формате ${PHONE_EXAMPLE}`),
   whatsapp: optionalText(30).refine((s) => s === "" || /^[+\d][\d\s()-]{6,}$/.test(s), "Номер WhatsApp с кодом страны"),
   telegram: optionalText(40).refine((s) => s === "" || /^@?[A-Za-z0-9_]{4,32}$/.test(s), "Имя пользователя, например @bliss_clean"),
   email: optionalText(80).refine((s) => s === "" || z.email().safeParse(s).success, "Проверьте e-mail"),

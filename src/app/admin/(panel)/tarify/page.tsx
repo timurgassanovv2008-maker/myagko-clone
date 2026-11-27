@@ -3,6 +3,7 @@ import { getPriceList } from "@/server/settings";
 import { CATEGORIES } from "@/lib/pricing/catalog";
 import { CURRENCIES } from "@/lib/currency";
 import { CURRENCY } from "@/lib/company";
+import { ROUND_STEP } from "@/lib/pricing/calc";
 import { savePricesAction } from "../../actions";
 import { SettingsForm } from "../SettingsForm";
 import styles from "../../admin.module.css";
@@ -36,7 +37,7 @@ export default async function PricesPage() {
           })),
           {
             title: "Доплаты и минимум",
-            note: "Порядок расчёта: цена × количество, затем надбавки в процентах (складываются), округление строки до 10. Минимальный заказ — только на чистку, выезд за город добавляется после.",
+            note: `Порядок расчёта: цена × количество, затем надбавки в процентах (складываются), округление строки до ${ROUND_STEP} ${cur}. Минимальный заказ — только на чистку, выезд за город добавляется после.`,
             fields: [
               { name: "minOrder", label: "Минимальный заказ на чистку", type: "number", suffix: cur, defaultValue: String(p.minOrder) },
               { name: "heavySoilPercent", label: "Сильные загрязнения", type: "number", suffix: "%", defaultValue: String(p.heavySoilPercent) },

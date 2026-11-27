@@ -1,7 +1,8 @@
 import { z } from "zod";
 import "./zod-locale";
 import { MAX_ITEMS, orderItemSchema } from "./pricing/calc";
-import { CURRENCY } from "./company";
+import { CURRENCY, PHONE_EXAMPLE } from "./company";
+import type { CurrencyCode } from "./currency";
 
 // Заявка: общая схема для формы в браузере и проверки на сервере.
 
@@ -24,16 +25,19 @@ export function timeSlotTitle(id: string | null | undefined): string | null {
 /**
  * Номер в международном виде: «8 (701) 123-45-67» → «+77011234567».
  * Местные форматы понимаем для страны валюты сайта (KZ: 8…, TR: 0…).
+ * Для евро страна не одна, поэтому нужен код страны: «+49…» или «0049…».
  */
-export function normalizePhone(raw: string): string {
+export function normalizePhone(raw: string, currency: CurrencyCode = CURRENCY): string {
   const trimmed = raw.trim();
   const digits = trimmed.replace(/\D/g, "");
   if (trimmed.startsWith("+")) return "+" + digits;
-  if (CURRENCY === "KZT") {
+  if (digits.startsWith("00") && digits.length > 4) return "+" + digits.slice(2);
+  if (currency === "EUR") return digits;
+  if (currency === "KZT") {
     if (digits.length === 11 && (digits[0] === "8" || digits[0] === "7")) return "+7" + digits.slice(1);
     if (digits.length === 10) return "+7" + digits;
   }
-  if (CURRENCY === "TRY") {
+  if (currency === "TRY") {
     if (digits.length === 11 && digits[0] === "0") return "+90" + digits.slice(1);
     if (digits.length === 10 && digits[0] === "5") return "+90" + digits;
     if (digits.length === 12 && digits.startsWith("90")) return "+" + digits;
@@ -71,11 +75,12 @@ export const customerSchema = z.object({
   phone: z
     .string()
     .trim()
-    .transform(normalizePhone)
+    .transform((p) => normalizePhone(p))
     .refine((p) => {
       const n = p.replace("+", "").length;
       return n >= 10 && n <= 15;
-    }, "Проверьте номер: нужно 10–15 цифр"),
+    }, "Проверьте номер: нужно 10–15 цифр")
+    .refine((p) => p.startsWith("+") || CURRENCY !== "EUR", `Укажите номер с кодом страны, например ${PHONE_EXAMPLE}`),
   address: z.string().trim().min(5, "Укажите адрес: улица, дом, квартира").max(300, "Слишком длинный адрес"),
   outOfTown: z.boolean().default(false),
   wishDate: z

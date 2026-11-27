@@ -26,6 +26,23 @@ export type PriceList = z.infer<typeof priceListSchema>;
  * владелец заменит их своими в «Тарифах».
  */
 export const DEMO_PRICE_LISTS: Record<CurrencyCode, PriceList> = {
+  EUR: {
+    variants: {
+      "sofa-2": 79,
+      "sofa-3": 99,
+      "sofa-corner": 139,
+      armchair: 39,
+      "armchair-recliner": 49,
+      "mattress-single": 49,
+      "mattress-double": 69,
+      "chair-seat": 12,
+      "chair-seat-back": 18,
+    },
+    minOrder: 69,
+    heavySoilPercent: 30,
+    mattressSecondSidePercent: 70,
+    outOfTownFee: 25,
+  },
   KZT: {
     variants: {
       "sofa-2": 18000,

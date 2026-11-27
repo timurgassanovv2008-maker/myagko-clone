@@ -5,7 +5,7 @@ import type { PriceList } from "./price-list";
 export type ItemEstimate =
   | {
       kind: "price";
-      /** итог строки (как в корзине), округлён до 10 */
+      /** итог строки (как в корзине), округлён до шага валюты */
       amount: number;
       /** цена одного предмета без надбавок */
       unitPrice: number;

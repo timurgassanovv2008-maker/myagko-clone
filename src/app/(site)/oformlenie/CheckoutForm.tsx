@@ -7,6 +7,7 @@ import { CATEGORY_BY_ID, variantTitle } from "@/lib/pricing/catalog";
 import { calculateQuote } from "@/lib/pricing/calc";
 import type { PriceList } from "@/lib/pricing/price-list";
 import { formatMoney, type CurrencyCode } from "@/lib/currency";
+import { PHONE_EXAMPLE } from "@/lib/company";
 import { crossFieldIssues, flattenIssues, orderRequestSchema, TIME_SLOTS, type FieldErrors } from "@/lib/order";
 import { readCart, useCart, writeCart } from "@/lib/cart/store";
 import { prepareImage, ImagePrepError } from "@/lib/client/images";
@@ -301,7 +302,7 @@ function CheckoutInner({ prices, currency }: Props) {
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel"
-                placeholder="+7 700 000 00 00"
+                placeholder={PHONE_EXAMPLE}
                 value={draft.phone}
                 onChange={(e) => set("phone", e.target.value)}
                 {...inputProps("phone")}

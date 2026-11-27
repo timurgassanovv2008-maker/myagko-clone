@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { CATEGORY_IDS, CATEGORY_BY_ID, VARIANT_IDS, type CategoryId, type VariantId } from "./catalog";
 import type { PriceList } from "./price-list";
+import { CURRENCIES } from "../currency";
+import { CURRENCY } from "../company";
 
 // ─── Позиция заказа ────────────────────────────────────────────────
 
@@ -41,7 +43,7 @@ export type LineResult =
       base: number;
       /** сумма надбавок в процентах (загрязнения + вторая сторона) */
       surchargePercent: number;
-      /** итог строки, округлён до 10 */
+      /** итог строки, округлён до шага валюты (тенге, лиры — 10; евро — 1) */
       amount: number;
     }
   | { known: false };
@@ -62,27 +64,30 @@ export type Quote = {
   total: number | null;
 };
 
-/** Округление до 10, половина — вверх. Работает на целых числах. */
-function roundTo10(hundredths: number): number {
+/** Шаг округления строки для валюты сайта. */
+export const ROUND_STEP: number = CURRENCIES[CURRENCY].roundStep;
+
+/** Округление до шага (10 или 1), половина — вверх. Работает на целых числах. */
+function roundToStep(hundredths: number, step: number): number {
   // hundredths = сумма × 100
-  return Math.floor((hundredths + 500) / 1000) * 10;
+  return Math.floor((hundredths + step * 50) / (step * 100)) * step;
 }
 
 /**
  * Единственная формула расчёта. Её же вызывает сервер при приёме заявки.
  *
- *   позиция = округлить_до_10( цена × кол-во × (100 + загрязнения% + вторая_сторона%) / 100 )
+ *   позиция = округлить( цена × кол-во × (100 + загрязнения% + вторая_сторона%) / 100 )   — до 10 (₸, ₺) или до 1 (€)
  *   чистка  = max(сумма позиций, минимальный заказ)   — если есть хотя бы одна позиция с ценой
  *   итог    = чистка + выезд за город
  */
-export function calculateQuote(items: OrderItem[], prices: PriceList, outOfTown: boolean): Quote {
+export function calculateQuote(items: OrderItem[], prices: PriceList, outOfTown: boolean, roundStep: number = ROUND_STEP): Quote {
   const lines: LineResult[] = items.map((item) => {
     if (item.category === "other" || !item.variant) return { known: false };
     const base = prices.variants[item.variant] * item.qty;
     const surchargePercent =
       (item.heavySoil ? prices.heavySoilPercent : 0) +
       (item.secondSide && CATEGORY_BY_ID[item.category].hasSecondSide ? prices.mattressSecondSidePercent : 0);
-    return { known: true, base, surchargePercent, amount: roundTo10(base * (100 + surchargePercent)) };
+    return { known: true, base, surchargePercent, amount: roundToStep(base * (100 + surchargePercent), roundStep) };
   });
 
   const knownLines = lines.filter((l): l is Extract<LineResult, { known: true }> => l.known);
